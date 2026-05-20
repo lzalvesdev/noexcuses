@@ -1,0 +1,40 @@
+  services:
+
+    api:
+      image: noexcusesfit-api
+      build:
+        context: ./back-end
+        dockerfile: Dockerfile.api
+      environment:
+        ASPNETCORE_ENVIRONMENT: Production
+        ConnectionStrings__DefaultConnection: "Server=${DB_HOST};Database=NoExcusesFit;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;"
+        JwtSettings__Secret: "${JWT_SECRET}"
+        JwtSettings__Issuer: NoExcusesFit
+        JwtSettings__Audience: NoExcusesFit
+        JwtSettings__ExpiresInMinutes: "15"
+        JwtSettings__RefreshTokenExpiresInDays: "7"
+        Cors__AllowedOrigins: "${ALLOWED_ORIGINS}"
+      restart: unless-stopped
+
+    worker:
+      image: noexcusesfit-worker
+      build:
+        context: ./back-end
+        dockerfile: Dockerfile.worker
+      environment:
+        ConnectionStrings__DefaultConnection: "Server=${DB_HOST};Database=NoExcusesFit;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;"
+      restart: unless-stopped
+
+    frontend:
+      image: noexcusesfit-frontend
+      build:
+        context: ./front-end
+        dockerfile: Dockerfile
+        args:
+          VITE_API_URL: "${VITE_API_URL}"
+      ports:
+        - "80:80"
+        - "443:443"
+      depends_on:
+        - api
+      restart: unless-stopped

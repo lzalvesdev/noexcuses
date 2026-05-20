@@ -1,0 +1,20 @@
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
+
+COPY NoExcusesFit.sln .
+COPY NoExcusesFit/NoExcusesFit.csproj                   NoExcusesFit/
+COPY NoExcusesFit.Business/NoExcusesFit.Business.csproj NoExcusesFit.Business/
+COPY NoExcusesFit.Data/NoExcusesFit.Data.csproj         NoExcusesFit.Data/
+COPY NoExcusesFit.Domain/NoExcusesFit.Domain.csproj     NoExcusesFit.Domain/
+COPY NoExcusesFit.Tests/NoExcusesFit.Tests.csproj       NoExcusesFit.Tests/
+COPY NoExcusesFit.Worker/NoExcusesFit.Worker.csproj     NoExcusesFit.Worker/
+RUN dotnet restore NoExcusesFit.sln
+
+COPY . .
+RUN dotnet publish NoExcusesFit/NoExcusesFit.csproj -c Release -o /app/publish --no-restore
+
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
+WORKDIR /app
+COPY --from=build /app/publish .
+EXPOSE 8080
+ENTRYPOINT ["dotnet", "NoExcusesFit.dll"]
