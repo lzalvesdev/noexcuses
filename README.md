@@ -39,7 +39,7 @@ Internet
     └── SQL Server  (sem acesso externo)
 ```
 
-O banco fica isolado em uma subnet privada, só a API consegue chegar nele via rede interna. Acesso para administração via SSM Session Manager, sem expor portas ao público.
+O banco fica isolado em uma subnet privada, só a API consegue chegar nele via rede interna. Acesso administrativo via SSH Jump Host — o EC2 #1 serve de intermediário, sem expor o banco à internet.
 
 ---
 
