@@ -49,7 +49,7 @@ services:
       context: ./front-end
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: "http://localhost/api"
+        VITE_API_URL: "${VITE_API_URL}"
     ports:
       - "80:80"
     depends_on:

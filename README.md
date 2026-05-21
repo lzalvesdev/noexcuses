@@ -28,18 +28,14 @@ Este projeto surgiu da minha vontade de sair de tutoriais e construir algo real,
 ```
 Internet
     │
-[EC2 #1 — subnet pública]
+[EC2 — subnet pública]
     ├── Nginx  (SSL, proxy reverso)
     ├── API .NET
-    └── Worker .NET
-    │
-    │  rede privada VPC
-    ▼
-[EC2 #2 — subnet privada]
-    └── SQL Server  (sem acesso externo)
+    ├── Worker .NET
+    └── SQL Server  (container interno, sem porta exposta)
 ```
 
-O banco fica isolado em uma subnet privada, só a API consegue chegar nele via rede interna. Acesso administrativo via SSH Jump Host — o EC2 #1 serve de intermediário, sem expor o banco à internet.
+Tudo containerizado em um único EC2. O SQL Server não expõe porta externamente, só a API consegue chegar nele via rede interna do Docker.
 
 ---
 
