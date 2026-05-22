@@ -11,7 +11,7 @@ Este projeto surgiu da minha vontade de sair de tutoriais e construir algo real,
 | 🔧 Backend | .NET 9, ASP.NET Core, Dapper, SQL Server |
 | 🔐 Auth | JWT, Refresh Token Rotation, Rate Limiting |
 | 🎨 Frontend | React 19, TypeScript, Tailwind CSS |
-| ☁️ Infra | AWS EC2, VPC, Docker, Nginx |
+| ☁️ Infra | AWS EC2, VPC, Docker, Nginx, GitHub Actions |
 
 ---
 
@@ -35,7 +35,7 @@ Internet
     └── SQL Server  (container interno, sem porta exposta)
 ```
 
-Tudo containerizado em um único EC2. O SQL Server não expõe porta externamente, só a API consegue chegar nele via rede interna do Docker.
+Tudo containerizado em um unico EC2. O nginx serve o frontend, termina o SSL e faz proxy reverso para a API internamente, o browser nunca acessa a API diretamente. O SQL Server não expõe porta externamente, só a API consegue chegar nele via rede interna do Docker. CI configurado com GitHub Actions rodando build e testes a cada push.
 
 ---
 
