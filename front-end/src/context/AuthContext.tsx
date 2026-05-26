@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { User } from "../types";
-import { decodeToken } from "../utils/jwt";
+import { decodeToken, decodeTokenRaw } from "../utils/jwt";
 
 interface AuthContextType {
     user: User | null;
@@ -14,12 +14,20 @@ export function AuthProvider({ children }: ({ children: React.ReactNode })) {
     const [user, setUser] = useState<User | null>(() => {
         const token = localStorage.getItem('noExcuses_token');
         if (!token) return null;
+
         const decoded = decodeToken(token);
-        if (!decoded) {
+        if (decoded) return decoded;
+
+        // Access token expirado — checa se refresh token ainda existe
+        const refresh = localStorage.getItem('noExcuses_refresh');
+        if (!refresh) {
             localStorage.removeItem('noExcuses_token');
-            localStorage.removeItem('noExcuses_refresh');
+            return null;
         }
-        return decoded;
+
+        // Refresh token válido: carrega o usuário do token expirado para a UI funcionar.
+        // O interceptor do client.ts vai renovar o token na primeira chamada à API.
+        return decodeTokenRaw(token);
     });
 
     useEffect(() => {
