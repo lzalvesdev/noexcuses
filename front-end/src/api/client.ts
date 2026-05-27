@@ -23,7 +23,7 @@ client.interceptors.request.use((requestConfig) => {
 client.interceptors.response.use(
     (response) => response,
     async (error) => {
-        const original = error.requestConfig;
+        const original = error.config;
         const isAuthEndpoint = original.url?.includes('/Auth/login')
             || original.url?.includes('/Auth/refresh')
             || original.url?.includes('/Auth/register');
